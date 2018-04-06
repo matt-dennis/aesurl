@@ -29,13 +29,21 @@ app.get('/', function(request, response) {
 
 	const valid = sha1(payload + salt) === request.query.hash;
 	console.log(valid);
-	//for some weird reason, i had to add a few characters to make it work properly
-	payload += 'aaaa';
 
-	const decipher = crypto.createDecipheriv(algorithm, new Buffer(key,'hex'), new Buffer(iv,'hex'));
-	const decryptedPayload = decipher.update(new Buffer(payload, 'hex'), 'hex', 'ascii');      
+	if(valid){
 
-	response.send(decryptedPayload); 
+		//for some weird reason, i had to add a few characters to make it work properly
+		payload += 'aaaa';
+
+		const decipher = crypto.createDecipheriv(algorithm, new Buffer(key,'hex'), new Buffer(iv,'hex'));
+		const decryptedPayload = decipher.update(new Buffer(payload, 'hex'), 'hex', 'ascii');      
+
+		response.send(decryptedPayload); 
+	} else {
+
+		response.send('Invalid code');
+
+	}
 
 })
 
