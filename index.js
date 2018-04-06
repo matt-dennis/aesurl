@@ -23,12 +23,12 @@ app.get('/', function(request, response) {
 	var iv = '39383736353433323130393837363534', //hex value
 	key = '1a38db93d9214eda20b1a514afe63c5d',//hex value
 	payload = request.query.data;
-	//payload is encrypted ascii json
+	//payload is encrypted ascii json + sha1 hash of message
 
 	const salt = 'truth of source';
 
-	const valid = sha1(payload + salt) === request.query.hash;
-	console.log(valid);
+	const valid = sha1(payload.substring(0,payload.length - 40) + salt) === payload.substring(payload.length - 40, payload.length);
+	console.log('hash valid:' + valid);
 
 	if(valid){
 
