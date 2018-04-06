@@ -27,7 +27,13 @@ app.get('/', function(request, response) {
 
 	const salt = 'truth of source';
 
-	const valid = sha1(payload.substring(0,payload.length - 40) + salt) === payload.substring(payload.length - 40, payload.length);
+	console.log('data',payload);
+	console.log('length',payload.length);
+	console.log('msg',payload.substring(0,payload.length - 40));
+	console.log('hash',payload.substring(payload.length - 40, payload.length));
+
+	//const valid = sha1(payload.substring(0,payload.length - 40) + salt) === payload.substring(payload.length - 40, payload.length);
+	const valid = sha1(payload + salt) === request.query.hash;
 	console.log('hash valid:' + valid);
 
 	if(valid){
@@ -38,7 +44,8 @@ app.get('/', function(request, response) {
 		const decipher = crypto.createDecipheriv(algorithm, new Buffer(key,'hex'), new Buffer(iv,'hex'));
 		const decryptedPayload = decipher.update(new Buffer(payload, 'hex'), 'hex', 'ascii');      
 
-		response.send(decryptedPayload); 
+		response.send(decryptedPayload, { 'Content-Type': 'text/plain' }, 201);
+		//response.send(); 
 	} else {
 
 		response.send('Invalid code');
