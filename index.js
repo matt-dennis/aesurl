@@ -25,6 +25,7 @@ app.get('/', function(request, response) {
 	payload = request.query.data;
 	//payload is encrypted ascii json + sha1 hash of message
 
+	//whyyy
 	const salt = 'truth of source';
 
 	console.log('data',payload);
